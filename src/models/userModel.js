@@ -47,12 +47,12 @@ const userSchema = new mongoose.Schema({
   },
   class_info: {
     type: classInfoSchema,
-    default: null
+    default: null,
   },
   companions: {
     type: [{ 
       type: mongoose.Schema.Types.ObjectId, 
-      ref: "UserCompanion" 
+      ref: "UserCompanion", 
     }],
     default: [],
   },
