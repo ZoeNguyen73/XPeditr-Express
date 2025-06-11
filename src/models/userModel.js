@@ -1,51 +1,7 @@
 const mongoose = require("mongoose");
 
-const statObjectSchema = new mongoose.Schema({
-  stat_id: {
-    type: mongoose.ObjectId,
-    ref: "Stat",
-    required: true,
-  },
-  value: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-});
-
-const classInfoSchema = new mongoose.Schema({
-  current: {
-    type: mongoose.ObjectId,
-    ref: "Class",
-    required: true,
-  },
-  secondary: {
-    type: mongoose.ObjectId,
-    ref: "Class",
-    required: false,
-    default: null,
-  },
-  subclass: {
-    type: mongoose.ObjectId,
-    ref: "Class",
-    required: false,
-    default: null,
-  },
-  history: {
-    type: [{
-      class_id: {
-        type: mongoose.ObjectId,
-        ref: "Class",
-        required: true,
-      },
-      acquired_at: {
-        type: Date,
-        required: true,
-      },
-    }],
-    default: [],
-  },
-});
+const statObjectSchema = require("../schemas/statObjectSchema");
+const classInfoSchema = require("../schemas/classInfoSchema");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -100,12 +56,7 @@ const userSchema = new mongoose.Schema({
     }],
     default: [],
   },
-  created_at: {
-    type: Date,
-    required: true,
-    default: Date.now(),
-  },
-});
+}, { timestamps: true });
 
 const UserModel = mongoose.model("User", userSchema);
 
