@@ -35,6 +35,10 @@ const taskSchema = new mongoose.Schema({
     ref: "Quest",
     default: null,
   },
+  due_date: {
+    type: Date,
+    default: null,
+  },
 }, { timestamps: true });
 
 const TaskModel = mongoose.model("Task", taskSchema);

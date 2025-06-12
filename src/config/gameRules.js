@@ -1,6 +1,5 @@
 module.exports = {
-  XP_BONUS_RATE_MINOR_QUEST: 0.3,
-
+  
   STAT_CAP_PER_HABIT: 10,
   STAT_POINT_THRESHOLD_LEVEL: {
     1: 200, // accumulate 200 stat points to level up to 2
@@ -22,5 +21,11 @@ module.exports = {
 
   // specific level requirements can be edited in generateLevelRules.js script
 
+  // XP rewards
+  TASK_MAX_XP_REWARD: 15,
+  TASK_MAX_STAT_POINT_REWARD: 10,
+  HABIT_MAX_XP_REWARD: 10,
+  HABIT_MAX_STAT_POINT_REWARD: 5,
+  XP_BONUS_RATE_MINOR_QUEST: 0.3,
 
 };
