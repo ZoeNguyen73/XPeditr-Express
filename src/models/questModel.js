@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const { QUEST_TYPES } = require("../config/constants");
+
 const questSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.ObjectId,
@@ -9,9 +11,9 @@ const questSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["minor", "major"],
+    enum: QUEST_TYPES,
     required: true,
-    default: "minor",
+    default: QUEST_TYPES[0], // minor
   },
   title: {
     type: String,
@@ -28,7 +30,7 @@ const questSchema = new mongoose.Schema({
   },
   completed_at: {
     type: Date,
-    default: null
+    default: null,
   },
   parent_quest: {
     type: mongoose.ObjectId,
@@ -38,7 +40,7 @@ const questSchema = new mongoose.Schema({
   },
   due_date: {
     type: Date,
-    default: null
+    default: null,
   },
 }, { timestamps: true });
 

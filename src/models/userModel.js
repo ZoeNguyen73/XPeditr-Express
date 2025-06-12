@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const statObjectSchema = require("../schemas/statObjectSchema");
 const classInfoSchema = require("../schemas/classInfoSchema");
 
+const { AVATAR_OPTIONS } = require("../config/constants");
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -22,8 +24,8 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    enum: AVATAR_OPTIONS,
     required: true,
-    default: "cat",
   },
   level: {
     type: Number,
