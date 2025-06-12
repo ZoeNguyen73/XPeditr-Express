@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const { COMPANION_TYPES } = require("../config/constants");
+
 const companionSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,11 +14,7 @@ const companionSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["pet", "npc"],
-    required: true,
-  },
-  icon_url: {
-    type: String,
+    enum: COMPANION_TYPES,
     required: true,
   },
   description: { 

@@ -6,10 +6,6 @@ const classSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  icon_url: {
-    type: String,
-    required: true,
-  },
   description: { 
     type: String, 
     default: "", 

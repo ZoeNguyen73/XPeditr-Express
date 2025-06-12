@@ -7,7 +7,7 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     ref: "User",
     required: true,
-    index: true
+    index: true,
   },
   title: {
     type: String,
@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema({
   },
   completed_at: {
     type: Date,
-    default: null
+    default: null,
   },
   rewards: {
     type: rewardSchema,

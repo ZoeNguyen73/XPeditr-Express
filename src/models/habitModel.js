@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const rewardSchema = require("../schemas/rewardSchema");
+const { FREQUENCY_TYPES, HABIT_TYPES } = require("../config/constants");
 
 const progressLogSchema = new mongoose.Schema({
   date: {
@@ -32,15 +33,15 @@ const habitSchema = new mongoose.Schema({
   },
   frequency: {
     type: String,
-    enum: ["daily", "weekly"],
+    enum: FREQUENCY_TYPES,
     required: true,
     default: "daily",
   },
   type: {
     type: String,
-    enum: ["count", "cumulative"],
+    enum: HABIT_TYPES,
     required: true,
-    default: "count",
+    default: HABIT_TYPES[0], // count
   },
   target_value: {
     type: Number,
