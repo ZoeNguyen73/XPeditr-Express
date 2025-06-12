@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: AVATAR_OPTIONS,
     required: true,
+    default: "1a",
   },
   level: {
     type: Number,
