@@ -10,6 +10,46 @@ const RefreshTokenModel = require("../models/refreshTokenModel");
 
 const { badRequest } = require("../utils/errorHelpers");
 
+const createAccessToken = (userId) => {
+  const accessToken = jwt.sign(
+    {
+      // accessToken expiring in 15 minutes
+      exp: Math.floor(Date.now() / 1000) + 60 * 15,
+      data: { id: userId },
+    },
+    process.env.JWT_SECRET_ACCESS
+  );
+
+  return accessToken;
+};
+
+const createRefreshToken = (userId) => {
+  const refreshToken = jwt.sign(
+    {
+      // refresh token expiring in 1 day
+      exp: Math.floor(Date.now()/1000 + 60 * 60 * 24),
+      data: { id: userId },
+    },
+    process.env.JWT_SECRET_REFRESH
+  );
+
+  return refreshToken;
+};
+
+const generateTempUsername = (email) => {
+  const baseUsername = email.split('@')[0]; // "zoe"
+  const randomSuffix = Math.random().toString(36).slice(2, 6); // "1x3a"
+  const tempUsername = `${baseUsername}_${randomSuffix}`; // "zoe_1x3a"
+  return tempUsername;
+};
+
+const initStatsForUser = async () => {
+  const allStats = await StatModel.find().lean();
+  const stats = [];
+  allStats.forEach(stat => stats.push({ stat_id: stat._id, value: 0}));
+  return stats;
+};
+
 const controller = {
   register: async (req, res, next) => {
     let validatedResults = null;
@@ -64,18 +104,11 @@ const controller = {
       const existingUser = await UserModel.findOne({ email });
       if (existingUser) throw badRequest("Account already activated");
 
-      // generate a temporary username
-      const baseUsername = email.split('@')[0]; // "zoe"
-      const randomSuffix = Math.random().toString(36).slice(2, 6); // "1x3a"
-      const tempUsername = `${baseUsername}_${randomSuffix}`; // "zoe_1x3a"
-
-      // generate empty stats
-      const allStats = await StatModel.find().lean();
-      const stats = [];
-      allStats.forEach(stat => stats.push({ stat_id: stat._id, value: 0}));
-
+      const username = generateTempUsername(email);
+      const stats = await initStatsForUser();
+      
       const user = await UserModel.create({
-        username: tempUsername,
+        username,
         email,
         password_hash: passwordHash,
         needs_profile_update: true,
@@ -83,6 +116,12 @@ const controller = {
       });
 
       await PendingUserModel.deleteOne({ token });
+
+      const accessToken = createAccessToken(user._id);
+      const refreshToken = createRefreshToken(user._id);
+
+      // store refresh token in database
+      await RefreshTokenModel.create({ token: refreshToken });
 
       return res.status(201).json({
         message: "Account activated",
@@ -92,6 +131,8 @@ const controller = {
           email: user.email,
           needs_profile_update: user.needs_profile_update,
         },
+        accessToken,
+        refreshToken,
       });
 
     } catch (error) {
