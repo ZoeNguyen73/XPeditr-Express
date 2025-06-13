@@ -43,6 +43,56 @@ const controller = {
     }
   },
 
+  activate: async (req, res, next) => {
+    try {
+      const { token } = req.query;
+
+      // confirm that a pending user entry exists:
+      const pendingUser = await PendingUserModel.findOne({ token });
+      
+      if (!pendingUser) throw badRequest("Activation link has expired");
+
+      // check if the token has already expired
+      if (pendingUser.expiresAt < Date.now()) {
+        await PendingUserModel.deleteOne({ token });
+        throw badRequest("Activation link has expired");
+      }
+
+      const { email, passwordHash } = pendingUser;
+
+      // check if an account has already existed - unlikely but just to be safe
+      const existingUser = await UserModel.findOne({ email });
+      if (existingUser) throw badRequest("Account already activated");
+
+      // generate a temporary username
+      const baseUsername = email.split('@')[0]; // "zoe"
+      const randomSuffix = Math.random().toString(36).slice(2, 6); // "1x3a"
+      const tempUsername = `${baseUsername}_${randomSuffix}`; // "zoe_1x3a"
+
+      const user = await UserModel.create({
+        username: tempUsername,
+        email,
+        password_hash: passwordHash,
+        needs_profile_update: true,
+      });
+
+      await PendingUserModel.deleteOne({ token });
+
+      return res.status(201).json({
+        message: "Account activated",
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          needs_profile_update: user.needs_profile_update,
+        },
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  },
+
   login: async (req, res, next) => {
 
   },

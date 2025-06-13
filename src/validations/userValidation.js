@@ -31,12 +31,6 @@ const userValidation = {
       .messages({ "any.only": "Confirm password must match password" }),
   }),
 
-  activate: Joi.object({
-    ...baseUserFields,
-    username: baseUserFields.username.required(),
-    avatar: baseUserFields.avatar.$required(),
-  }),
-
   login: Joi.object({
     username: baseUserFields.username.required(),
     password: Joi.string()
