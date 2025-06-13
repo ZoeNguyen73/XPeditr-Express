@@ -24,12 +24,17 @@ const baseUserFields = {
 
 const userValidation = {
   register: Joi.object({
-    username: baseUserFields.username.required(),
     email: baseUserFields.email.required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).min(6).required(),
     confirm_password: Joi.string().valid(Joi.ref("password")).required()
       .messages({ "any.only": "Confirm password must match password" }),
+  }),
+
+  activate: Joi.object({
+    ...baseUserFields,
+    username: baseUserFields.username.required(),
+    avatar: baseUserFields.avatar.$required(),
   }),
 
   login: Joi.object({
