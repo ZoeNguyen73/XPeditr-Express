@@ -4,6 +4,7 @@ const crypto = require("crypto");
 
 const PendingUserModel = require("../models/pendingUserModel");
 const UserModel = require("../models/userModel");
+const StatModel = require("../models/statModel");
 const UserValidator = require("../validations/userValidation");
 const RefreshTokenModel = require("../models/refreshTokenModel");
 
@@ -11,7 +12,6 @@ const { badRequest } = require("../utils/errorHelpers");
 
 const controller = {
   register: async (req, res, next) => {
-    console.log("==> authController.register...");
     let validatedResults = null;
 
     try {
@@ -69,11 +69,17 @@ const controller = {
       const randomSuffix = Math.random().toString(36).slice(2, 6); // "1x3a"
       const tempUsername = `${baseUsername}_${randomSuffix}`; // "zoe_1x3a"
 
+      // generate empty stats
+      const allStats = await StatModel.find().lean();
+      const stats = [];
+      allStats.forEach(stat => stats.push({ stat_id: stat._id, value: 0}));
+
       const user = await UserModel.create({
         username: tempUsername,
         email,
         password_hash: passwordHash,
         needs_profile_update: true,
+        stats
       });
 
       await PendingUserModel.deleteOne({ token });
