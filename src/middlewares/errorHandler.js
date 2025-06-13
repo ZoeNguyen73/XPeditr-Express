@@ -10,12 +10,19 @@ const defaultErrorMessages = {
 const errorHandler = (error, req, res, next) => {
   console.log("original error: " + JSON.stringify(error));
 
+  // handle joi-related errors
+  if (error.isJoi) {
+    error.statusCode = 400;
+    error.message = defaultErrorMessages[400];
+    error.details = error.details?.map(d => d.message).join(", ") || "Invalid input format";
+  }
+
   // set default error response
   const statusCode = error.statusCode || 500;
   // update error.message to follow the default message
   const errMessage = defaultErrorMessages[statusCode];
   // if there exists an error.message, to move the message to the details property
-  const errDetails = error.details || error.message;
+  const errDetails = error.details || error.message || "Something went wrong";
 
   const updatedError = {
     ... error, 
