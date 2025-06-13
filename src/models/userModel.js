@@ -59,6 +59,11 @@ const userSchema = new mongoose.Schema({
     }],
     default: [],
   },
+  needs_profile_update: {
+    type: Boolean,
+    required: true,
+    default: true,
+  }
 }, { timestamps: true });
 
 const UserModel = mongoose.model("User", userSchema);

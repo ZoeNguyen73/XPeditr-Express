@@ -4,13 +4,27 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 
-const app = express();
+const authRouter = require("./src/routes/authRoutes");
 
-// create .env file and add PORT=3000
+const notFoundHandler = require("./src/middlewares/notFoundHandler");
+const errorHandler = require("./src/middlewares/errorHandler");
+
+const app = express();
 const port = process.env.PORT || 8800;
 
-// in .env file add CORS_ORIGIN=*
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
+
+// all routes
+app.use("/api/v1/auth", authRouter);
+
+// Handle 404 errors
+app.use(notFoundHandler);
+
+// Centralized error handling middleware
+app.use(errorHandler);
 
 app.listen(port, async() => {
   try {

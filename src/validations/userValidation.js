@@ -11,7 +11,11 @@ const statSchema = Joi.object().keys({
 const companionsSchema = Joi.array().items(Joi.string().hex().length(24));
 
 const baseUserFields = {
-  username: Joi.string().alphanum().min(3).max(30),
+  username: Joi.string()
+    .pattern(/^[a-zA-Z0-9_]+$/)
+    .min(3)
+    .max(30)
+    .message('Username must be 3–30 characters long and only contain letters, numbers, and underscores'),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
   avatar: Joi.string().valid(...AVATAR_OPTIONS),
@@ -24,7 +28,6 @@ const baseUserFields = {
 
 const userValidation = {
   register: Joi.object({
-    username: baseUserFields.username.required(),
     email: baseUserFields.email.required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).min(6).required(),
