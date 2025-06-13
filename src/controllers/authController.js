@@ -8,7 +8,7 @@ const StatModel = require("../models/statModel");
 const UserValidator = require("../validations/userValidation");
 const RefreshTokenModel = require("../models/refreshTokenModel");
 
-const { badRequest } = require("../utils/errorHelpers");
+const { badRequest, notFound, createError } = require("../utils/errorHelpers");
 
 const createAccessToken = (userId) => {
   const accessToken = jwt.sign(
@@ -32,8 +32,9 @@ const createRefreshToken = (userId) => {
     },
     process.env.JWT_SECRET_REFRESH
   );
+  const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 1000); // 1 day
 
-  return refreshToken;
+  return {token: refreshToken, expiresAt };
 };
 
 const generateTempUsername = (email) => {
@@ -121,7 +122,7 @@ const controller = {
       const refreshToken = createRefreshToken(user._id);
 
       // store refresh token in database
-      await RefreshTokenModel.create({ token: refreshToken });
+      await RefreshTokenModel.create(refreshToken);
 
       return res.status(201).json({
         message: "Account activated",
@@ -132,7 +133,7 @@ const controller = {
           needs_profile_update: user.needs_profile_update,
         },
         accessToken,
-        refreshToken,
+        refreshToken: refreshToken.token,
       });
 
     } catch (error) {
@@ -141,7 +142,27 @@ const controller = {
   },
 
   login: async (req, res, next) => {
+    let validatedResults = null;
 
+    try {
+      validatedResults = await UserModel.login.validateAsync(req.body);
+      const { username, password } = validatedResults;
+      const user = await UserModel.findOne({ username });
+
+      if (!user) throw notFound("Unable to find matching account");
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+      if (!isPasswordCorrect) throw createError("Incorrect username or password");
+      
+      const accessToken = createAccessToken(user._id);
+      const refreshToken = createRefreshToken(user._id);
+      await RefreshTokenModel.create(refreshToken);
+
+      return res.status(200).json({ avatar: user.avatar, accessToken, refreshToken: refreshToken.token });
+
+    } catch (error) {
+      next(error);
+    }
   },
 
   refresh: async (req, res, next) => {
