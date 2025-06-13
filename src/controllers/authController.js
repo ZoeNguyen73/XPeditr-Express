@@ -24,17 +24,10 @@ const createAccessToken = (userId) => {
 };
 
 const createRefreshToken = (userId) => {
-  const refreshToken = jwt.sign(
-    {
-      // refresh token expiring in 1 day
-      exp: Math.floor(Date.now()/1000 + 60 * 60 * 24),
-      data: { id: userId },
-    },
-    process.env.JWT_SECRET_REFRESH
-  );
+  const token = crypto.randomBytes(64).toString("hex");
   const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 1000); // 1 day
 
-  return {token: refreshToken, expiresAt };
+  return { token, expiresAt, user_id: userId };
 };
 
 const generateTempUsername = (email) => {
@@ -166,7 +159,34 @@ const controller = {
   },
 
   refresh: async (req, res, next) => {
+    try {
+      const { refreshToken } = req.body;
+      if (!refreshToken) throw badRequest("No refresh token provided");
 
+      const tokenEntry = await RefreshTokenModel.findOne({ token: refreshToken });
+      if (!tokenEntry) throw badRequest("Invalid refresh token");
+
+      // check if the token has already expired
+      if (token.expiresAt < Date.now()) {
+        await RefreshTokenModel.deleteOne({ token: refreshToken });
+        throw badRequest("Token has expired. Please log in again.");
+      }
+
+      const userId = tokenEntry.user_id;
+      const user = await UserModel.findById(userId);
+
+      if (!user) {
+        await RefreshTokenModel.deleteMany({ user_id: id });
+        throw notFound("Account no longer exists");
+      }
+
+      // generate new access token
+      const accessToken = createAccessToken(id);
+      return res.status(200).json({ accessToken });
+      
+    } catch (error) {
+      next(error);
+    }
   },
 
   logout: async (req, res, next) => {

@@ -6,6 +6,11 @@ const refreshTokenSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  user_id: {
+    type: mongoose.ObjectId,
+    ref: "User",
+    required: true,
+  },
   expiresAt: { type: Date, required: true },
 });
 
