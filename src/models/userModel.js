@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema({
     }],
     default: [],
   },
-  need_profile_update: {
+  needs_profile_update: {
     type: Boolean,
     required: true,
     default: true,
