@@ -145,7 +145,7 @@ const controller = {
     let validatedResults = null;
 
     try {
-      validatedResults = await UserModel.login.validateAsync(req.body);
+      validatedResults = await UserValidator.login.validateAsync(req.body);
       const { username, password } = validatedResults;
       const user = await UserModel.findOne({ username });
 
@@ -170,7 +170,15 @@ const controller = {
   },
 
   logout: async (req, res, next) => {
-
+    try {
+      const { refreshToken } = req.body;
+      await RefreshTokenModel.findOneAndDelete({ token: refreshToken });
+      return res.json({
+        message: "Refresh token deleted successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
   },
 };
 
