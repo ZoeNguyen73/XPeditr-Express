@@ -151,7 +151,12 @@ const controller = {
       const refreshToken = createRefreshToken(user._id);
       await RefreshTokenModel.create(refreshToken);
 
-      return res.status(200).json({ avatar: user.avatar, accessToken, refreshToken: refreshToken.token });
+      return res.status(200).json({
+        username, 
+        avatar: user.avatar, 
+        accessToken, 
+        refreshToken: refreshToken.token, 
+      });
 
     } catch (error) {
       next(error);
