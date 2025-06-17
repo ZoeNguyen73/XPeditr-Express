@@ -123,6 +123,7 @@ const controller = {
           id: user._id,
           username: user.username,
           email: user.email,
+          avatar: user.avatar,
           needs_profile_update: user.needs_profile_update,
         },
         accessToken,
