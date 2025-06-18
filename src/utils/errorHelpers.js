@@ -13,6 +13,10 @@ function unauthorized(message) {
   return createError(message, 401);
 }
 
+function forbidden(message) {
+  return createError(message, 403);
+}
+
 function notFound(message) {
   return createError(message, 404);
 }

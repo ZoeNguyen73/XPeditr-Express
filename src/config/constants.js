@@ -7,6 +7,7 @@ const AVATAR_OPTIONS = [
   "11a", "11b", "12a", "12b", "13a", "13b", "14a", "14b", "15a", "15b",
 ];
 const COMPANION_TYPES = ["pet", "npc"];
+const USER_ROLES = ["user", "admin"];
 
 module.exports = {
   FREQUENCY_TYPES,
@@ -14,4 +15,5 @@ module.exports = {
   QUEST_TYPES,
   AVATAR_OPTIONS,
   COMPANION_TYPES,
+  USER_ROLES,
 };

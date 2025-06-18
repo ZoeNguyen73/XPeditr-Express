@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const statObjectSchema = require("../schemas/statObjectSchema");
 const classInfoSchema = require("../schemas/classInfoSchema");
 
-const { AVATAR_OPTIONS } = require("../config/constants");
+const { AVATAR_OPTIONS, USER_ROLES } = require("../config/constants");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -63,7 +63,15 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: true,
-  }
+  },
+  roles: {
+    type: [{
+      type: String,
+      enum: [...USER_ROLES]
+    }],
+    required: true,
+    default: ["user"],
+  },
 }, { timestamps: true });
 
 const UserModel = mongoose.model("User", userSchema);
