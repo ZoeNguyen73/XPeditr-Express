@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/userModel");
 
-const { unauthorized, notFound } = require("../utils/errorHelpers");
+const { unauthorized, notFound, forbidden } = require("../utils/errorHelpers");
 
 const userAuth = {
   isOptionalAuthenticated: async (req, res, next) => {
@@ -19,19 +19,20 @@ const userAuth = {
 
       const authHeader = req.header("Authorization");
 
-      if (!authHeader) throw unauthorized("Authentication details emmpty");
+      if (!authHeader) throw unauthorized("Authentication header missing");
 
-      if (authHeader.slice(0,7) !== "Bearer ") throw unauthorized("Invalid Authentication type");
+      if (!authHeader.toLowerCase().startsWith("bearer ")) throw unauthorized("Invalid Authentication type");
 
       const token = authHeader.slice(7);
       if (token.length === 0) throw unauthorized("Invalid Authentication token");
 
-      const verified = jwt.verified(token, process.env.JWT_SECRET_ACCESS);
+      const verified = jwt.verify(token, process.env.JWT_SECRET_ACCESS);
       if (!verified) throw unauthorized("Invalid Authentication token");
 
       const user = await UserModel.findById(verified.data.id);
-      if (!user) throw notFound("Unable to find matching user account");
+      if (!user) throw notFound("User not found");
 
+      req.authUser = user;
       req.authUserId = verified.data.id;
       return next();
 
@@ -40,8 +41,41 @@ const userAuth = {
     }
   },
 
-  isAuthorized: async (req, res, next) => {
+  isAuthorized: (...allowedRoles) => {
+    return async (req, res, next) => {
+      try {
+        if (!req.authUser || !Array.isArray(req.authUser.roles)) {
+          throw forbidden("User roles not found");
+        }
+        
+        const { username, roles } = req.authUser;
 
+        // if user has authorized role, then can skip further authorization check
+        for (const role of roles) {
+          if (allowedRoles.includes(role)) return next();
+        }
+
+        // if user does not have authorized role, then continue authorization check
+        const route = req.baseUrl.split("/").pop();
+
+        const userRouteAuth = () => {
+          if (username === req.params.username) return next();
+          throw forbidden("User is not authorized");
+        };
+
+        switch (route) {
+          case "users":
+            userRouteAuth();
+            break;
+          default:
+            throw forbidden("User is not authorized");
+        }
+
+      } catch (error) {
+        next(error);
+      }
+      
+    };
   },
 };
 
