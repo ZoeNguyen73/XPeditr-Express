@@ -20,7 +20,7 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // all routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api,/v1/users", userRouter);
+app.use("/api/v1/users", userRouter);
 
 // Handle 404 errors
 app.use(notFoundHandler);

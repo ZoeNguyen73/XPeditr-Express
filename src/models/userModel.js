@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema({
       enum: [...USER_ROLES]
     }],
     required: true,
-    default: ["User"],
+    default: ["user"],
   },
 }, { timestamps: true });
 
