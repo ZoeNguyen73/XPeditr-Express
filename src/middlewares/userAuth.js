@@ -47,7 +47,7 @@ const userAuth = {
         if (!req.authUser || !Array.isArray(req.authUser.roles)) {
           throw forbidden("User roles not found");
         }
-        
+
         const { username, roles } = req.authUser;
 
         // if user has authorized role, then can skip further authorization check
