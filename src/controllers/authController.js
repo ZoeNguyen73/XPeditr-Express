@@ -79,19 +79,24 @@ const controller = {
 
   activate: async (req, res, next) => {
     try {
-      console.log("backend activate running...");
-      console.log("🔥 [ACTIVATION REQUEST] ", {
-        method: req.method,
-        url: req.originalUrl,
-        headers: req.headers,
-        time: new Date().toISOString(),
-      });
       const { token } = req.query;
 
       // confirm that a pending user entry exists:
       const pendingUser = await PendingUserModel.findOne({ token });
       
-      if (!pendingUser) throw badRequest("Activation link has expired");
+      if (!pendingUser) {
+        return res.status(400).json({
+          message: "Activation link is no longer valid",
+          details: "This may happen if the account has already been activated or the link has expired.",
+        });
+      }
+
+      if (pendingUser.isActivated) {
+        return res.status(200).json({
+          message: "Account already activated",
+          details: "This account has already been activated. Please try logging in.",
+        });
+      }
 
       // check if the token has already expired
       if (pendingUser.expiresAt < Date.now()) {
@@ -116,7 +121,10 @@ const controller = {
         stats
       });
 
-      await PendingUserModel.deleteOne({ token });
+      await PendingUserModel.findOneAndUpdate(
+        { token },
+        { isActivated: true }
+      );
 
       const accessToken = createAccessToken(user._id);
       const refreshToken = createRefreshToken(user._id);
