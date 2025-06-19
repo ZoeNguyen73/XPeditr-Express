@@ -79,6 +79,13 @@ const controller = {
 
   activate: async (req, res, next) => {
     try {
+      console.log("backend activate running...");
+      console.log("🔥 [ACTIVATION REQUEST] ", {
+        method: req.method,
+        url: req.originalUrl,
+        headers: req.headers,
+        time: new Date().toISOString(),
+      });
       const { token } = req.query;
 
       // confirm that a pending user entry exists:
