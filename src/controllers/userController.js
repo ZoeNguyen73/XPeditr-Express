@@ -12,6 +12,7 @@ const controller = {
     try {
       validatedResults = await UserValidator.update.validateAsync(req.body);
       if (validatedResults.email) validatedResults.email = validatedResults.email.trim().toLowerCase();
+      validatedResults.needs_profile_update = false;
 
       const updatedUser = await UserModel.findByIdAndUpdate(
         req.authUserId,

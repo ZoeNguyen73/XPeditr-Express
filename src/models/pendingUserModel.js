@@ -5,10 +5,8 @@ const pendingUserSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   token: { type: String, required: true },
   expiresAt: { type: Date, required: true },
+  isActivated: { type: Boolean, default: false },
 });
-
-// TTL index on expiresAt (MongoDB auto-deletes after expiry)
-pendingUserSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const PendingUserModel = mongoose.model("PendingUser", pendingUserSchema);
 
