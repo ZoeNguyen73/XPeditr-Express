@@ -21,4 +21,4 @@ function notFound(message) {
   return createError(message, 404);
 }
 
-module.exports = { createError, badRequest, unauthorized, notFound };
+module.exports = { createError, badRequest, unauthorized, notFound, forbidden };

@@ -11,7 +11,7 @@ const questSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: QUEST_TYPES,
+    enum: [...QUEST_TYPES],
     required: true,
     default: QUEST_TYPES[0], // minor
   },
