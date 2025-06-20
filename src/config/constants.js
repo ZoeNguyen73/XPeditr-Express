@@ -8,6 +8,10 @@ const AVATAR_OPTIONS = [
 ];
 const COMPANION_TYPES = ["pet", "npc"];
 const USER_ROLES = ["user", "admin"];
+const QUOTE_CATEGORIES = [
+  "inspirational", "funny", "productivity", "self-care", "mindset",
+  "combat", "routine", "rest", "mental-health", "focus", "growth",
+];
 
 module.exports = {
   FREQUENCY_TYPES,
@@ -16,4 +20,5 @@ module.exports = {
   AVATAR_OPTIONS,
   COMPANION_TYPES,
   USER_ROLES,
+  QUOTE_CATEGORIES,
 };
