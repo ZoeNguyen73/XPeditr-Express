@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "generate-level-rules": "node src/utils/scripts/generateLevelRules.js",
-    "seed-stats": "node src/utils/seeds/seedStats.js"
+    "seed-stats": "node src/utils/seeds/seedStats.js",
+    "seed-quotes": "node src/utils/seeds/seedQuotes.js"
   },
   "repository": {
     "type": "git",

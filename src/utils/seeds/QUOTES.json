@@ -1,0 +1,234 @@
+[
+  {
+    "text": "Even the smallest quest can lead to the greatest change.",
+    "category": ["inspirational", "growth"]
+  },
+  {
+    "text": "You gain XP every time you show up — even when it's tough.",
+    "category": ["inspirational", "mindset", "growth"]
+  },
+  {
+    "text": "Heroes aren't born. They're leveled up, one habit at a time.",
+    "category": ["inspirational", "routine", "growth"]
+  },
+  {
+    "text": "Today’s grind is tomorrow’s legend.",
+    "category": ["inspirational", "productivity"]
+  },
+  {
+    "text": "Every step you take is a critical hit against procrastination.",
+    "category": ["inspirational", "productivity", "focus"]
+  },
+  {
+    "text": "Your daily tasks may seem minor, but they’re side quests to your main story.",
+    "category": ["inspirational", "routine", "mindset"]
+  },
+  {
+    "text": "Discipline is your sword. Consistency is your shield.",
+    "category": ["inspirational", "mindset", "focus", "routine"]
+  },
+  {
+    "text": "Resting is part of the strategy, not a sign of weakness.",
+    "category": ["inspirational", "rest", "self-care", "mental-health"]
+  },
+  {
+    "text": "The dragon of doubt only grows when you feed it.",
+    "category": ["mindset", "inspirational", "mental-health"]
+  },
+  {
+    "text": "You can’t fast-travel through life. Earn your path.",
+    "category": ["inspirational", "growth", "mindset"]
+  },
+  {
+    "text": "Procrastination has a 100% chance to drop regret loot.",
+    "category": ["funny", "productivity", "mindset"]
+  },
+  {
+    "text": "You’re not behind — your quest just has extra side missions.",
+    "category": ["funny", "mindset", "growth"]
+  },
+  {
+    "text": "Your coffee has granted +2 Productivity. Use it wisely.",
+    "category": ["funny", "productivity"]
+  },
+  {
+    "text": "You have unlocked the legendary power of… making your bed!",
+    "category": ["funny", "routine", "productivity"]
+  },
+  {
+    "text": "Every time you ignore your task list, a fairy loses its sparkle.",
+    "category": ["funny", "routine", "productivity"]
+  },
+  {
+    "text": "You’re one checklist away from becoming a Level 10 Adult.",
+    "category": ["funny", "routine", "growth"]
+  },
+  {
+    "text": "If life gives you slimes, turn them into XP.",
+    "category": ["funny", "growth", "mindset"]
+  },
+  {
+    "text": "Skipping leg day is a lawful evil alignment.",
+    "category": ["funny", "routine", "self-care"]
+  },
+  {
+    "text": "Daily quests reset at midnight. Don't miss the loot!",
+    "category": ["funny", "routine", "productivity"]
+  },
+  {
+    "text": "Courage isn’t slaying dragons. It’s getting out of bed before 9 AM.",
+    "category": ["funny", "routine", "mindset"]
+  },
+  {
+    "text": "Small habits are like tiny potions — they stack over time.",
+    "category": ["inspirational", "routine", "growth"]
+  },
+  {
+    "text": "Victory is built on consistent, critical hits of effort.",
+    "category": ["inspirational", "focus", "growth"]
+  },
+  {
+    "text": "No hero ever reached greatness by skipping their training montage.",
+    "category": ["inspirational", "routine", "growth"]
+  },
+  {
+    "text": "You don’t need a magic spell — just five focused minutes.",
+    "category": ["inspirational", "focus"]
+  },
+  {
+    "text": "Leveling up happens when no one is watching.",
+    "category": ["inspirational", "routine", "growth"]
+  },
+  {
+    "text": "Your quest log is long — but so is your courage.",
+    "category": ["inspirational", "growth", "mindset"]
+  },
+  {
+    "text": "This is the part of the story where you rise.",
+    "category": ["inspirational", "growth"]
+  },
+  {
+    "text": "Consistency beats natural talent in every campaign.",
+    "category": ["inspirational", "routine", "growth"]
+  },
+  {
+    "text": "Monsters are just challenges with good loot.",
+    "category": ["inspirational", "mindset", "combat"]
+  },
+  {
+    "text": "Keep going. You’re closer to your next level than you think.",
+    "category": ["inspirational", "growth", "mindset"]
+  },
+  {
+    "text": "Achievement unlocked: Showed up on a tough day.",
+    "category": ["funny", "mindset", "growth"]
+  },
+  {
+    "text": "You’ve already survived 100% of your hardest boss fights.",
+    "category": ["funny", "mental-health", "combat"]
+  },
+  {
+    "text": "Reminder: Rest days are not defeat — they’re buffs.",
+    "category": ["funny", "rest", "self-care"]
+  },
+  {
+    "text": "Legend has it the laundry pile grows stronger if ignored for 3+ days.",
+    "category": ["funny", "routine"]
+  },
+  {
+    "text": "Quest accepted: Drink water, stretch, and slay the inbox demon.",
+    "category": ["funny", "self-care", "productivity"]
+  },
+  {
+    "text": "You don’t need to be perfect. Just roll for initiative.",
+    "category": ["funny", "mindset", "growth"]
+  },
+  {
+    "text": "Make today epic. Even if it’s just epic-ly folding socks.",
+    "category": ["funny", "routine"]
+  },
+  {
+    "text": "Running from your responsibilities? That's a rogue move.",
+    "category": ["funny", "productivity", "routine"]
+  },
+  {
+    "text": "You're the main character. Act like it.",
+    "category": ["mindset", "growth", "inspirational"]
+  },
+  {
+    "text": "Today's loot: progress, pride, and possibly snacks.",
+    "category": ["funny", "routine", "growth"]
+  },
+  {
+    "text": "Put down your sword today. Even warriors need naps.",
+    "category": ["rest", "self-care", "mental-health", "funny"]
+  },
+  {
+    "text": "Use your potions. Sleep is not optional in boss battles.",
+    "category": ["self-care", "rest", "mental-health", "funny"]
+  },
+  {
+    "text": "You're not lazy — you're just stuck in a cooldown period.",
+    "category": ["funny", "mental-health", "self-care", "rest"]
+  },
+  {
+    "text": "Some days you’re the dragon. Some days you’re the loot. Rest either way.",
+    "category": ["funny", "rest", "mental-health"]
+  },
+  {
+    "text": "A focused mind is sharper than any sword.",
+    "category": ["focus", "mindset", "combat"]
+  },
+  {
+    "text": "You can't crit without trying. Roll the dice.",
+    "category": ["mindset", "inspirational", "combat"]
+  },
+  {
+    "text": "Battles are won in moments of discipline, not motivation.",
+    "category": ["combat", "mindset", "focus", "growth"]
+  },
+  {
+    "text": "Training doesn’t stop when you're tired — it starts there.",
+    "category": ["growth", "focus", "combat"]
+  },
+  {
+    "text": "Healing takes time. Stay in the inn if you need to.",
+    "category": ["rest", "self-care", "mental-health"]
+  },
+  {
+    "text": "Your energy bar isn’t infinite. Rest before it hits zero.",
+    "category": ["rest", "self-care", "mental-health"]
+  },
+  {
+    "text": "Even legendary heroes ask for help.",
+    "category": ["mental-health", "growth", "mindset"]
+  },
+  {
+    "text": "The real grind is showing up when no one is watching.",
+    "category": ["focus", "growth", "productivity"]
+  },
+  {
+    "text": "Your inventory is full. Time to declutter your mind.",
+    "category": ["self-care", "mental-health", "funny"]
+  },
+  {
+    "text": "The fog of war lifts when you take one clear action.",
+    "category": ["focus", "mindset", "productivity"]
+  },
+  {
+    "text": "Recharging isn't slacking — it's part of the build.",
+    "category": ["rest", "self-care", "growth"]
+  },
+  {
+    "text": "Magic grows with practice, not perfection.",
+    "category": ["growth", "routine", "mindset"]
+  },
+  {
+    "text": "Don't wait to feel ready. Roll with advantage anyway.",
+    "category": ["mindset", "focus", "growth"]
+  },
+  {
+    "text": "You are your most powerful ally. Equip self-compassion.",
+    "category": ["self-care", "mental-health", "mindset"]
+  }
+]

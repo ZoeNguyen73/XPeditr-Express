@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const QUOTE_CATEGORIES = require("../config/constants");
+const { QUOTE_CATEGORIES } = require("../config/constants");
 
 const quoteSchema = new mongoose.Schema({
   text: {
@@ -17,6 +17,6 @@ const quoteSchema = new mongoose.Schema({
   }
 })
 
-const QuoteModel = mongoose.model9("Quote", quoteSchema);
+const QuoteModel = mongoose.model("Quote", quoteSchema);
 
 module.exports = QuoteModel;
