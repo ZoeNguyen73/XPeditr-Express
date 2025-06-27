@@ -85,7 +85,12 @@ const controller = {
 
       const quest = await QuestModel.findById(questId)
         .populate({
-          path: "parent_quest"
+          path: "parent_quest",
+          select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+          populate: {
+            path: "parent_quest",
+            select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+          } 
         });
 
       if (!quest) throw notFound("Unable to find Quest");
