@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/userModel");
+const QuestModel = require("../models/questModel");
 
-const { unauthorized, notFound, forbidden } = require("../utils/errorHelpers");
+const { unauthorized, notFound, forbidden, badRequest } = require("../utils/errorHelpers");
 
 const userAuth = {
   isOptionalAuthenticated: async (req, res, next) => {
@@ -63,9 +64,24 @@ const userAuth = {
           throw forbidden("User is not authorized");
         };
 
+        const questRouteAuth = async () => {
+          if (!req.params.questId) throw badRequest("Quest ID missing in params");
+          try {
+            const quest = await QuestModel.findById(req.params.questId);
+            if (!quest) throw notFound("Quest not found in database");
+            if (quest.user_id.toString() !== req.authUserId.toString()) throw forbidden("User is not authorized to review this quest");
+            return next();
+          } catch (error) {
+            throw error;
+          }
+        };
+
         switch (route) {
           case "users":
             userRouteAuth();
+            break;
+          case "quests":
+            await questRouteAuth();
             break;
           default:
             throw forbidden("User is not authorized");

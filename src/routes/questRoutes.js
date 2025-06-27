@@ -1,0 +1,31 @@
+const express = require("express");
+
+const questController = require("../controllers/questController");
+const userAuth = require("../middlewares/userAuth");
+
+const router = express.Router();
+
+router.post("/", userAuth.isAuthenticated, questController.createQuest);
+router.get("/:questId", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"), 
+  questController.retrieveQuest
+);
+router.patch("/:questId/archive", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"), 
+  questController.archiveQuest
+);
+router.patch("/:questId/complete", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"), 
+  questController.completeQuest
+);
+router.patch("/:questId", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"), 
+  questController.updateQuest
+);
+
+
+module.exports = router;
