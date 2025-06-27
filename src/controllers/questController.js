@@ -2,6 +2,7 @@ const QuestModel = require("../models/questModel");
 const QuestValidator = require("../validations/questValidation");
 
 const { badRequest, notFound, createError } = require("../utils/errorHelpers");
+
 const parentValidation = async (childQuestType, parentQuestId) => {
   try {
     const parentQuest = await QuestModel.findById(parentQuestId);
@@ -27,6 +28,21 @@ const parentValidation = async (childQuestType, parentQuestId) => {
   } catch (error) {
     throw error;
   }
+};
+
+const isHigherHierarchy = (newType, oldType) => {
+  const rank = {"minor": 1, "main": 2, "epic": 3};
+  return rank[newType] > rank[oldType];
+};
+
+const isCircularReference = async (questId, newParentId) => {
+    let currentId = newParentId;
+    while (currentId) {
+      if (currentId.toString() === questId.toString()) return true;
+      const quest = await QuestModel.findById(currentId).select('parent_quest');
+      currentId = quest?.parent_quest;
+    }
+    return false;
 };
 
 // TO DO: utils to calculate percentage completion
@@ -68,11 +84,9 @@ const controller = {
       // check if user already has another quest with the same type and title
       const hasSimilarQuest = await QuestModel.findOne({
         user_id: userId,
-        type,
         title,
-        is_completed: false
       })
-      if (hasSimilarQuest) throw badRequest("There is an active quest with the same title. Please change the title for better differentiation.");
+      if (hasSimilarQuest) throw badRequest("There is a quest with the same title. Please change the title for better differentiation.");
 
       // check if there is a parent_quest and if yes, the hierarchy logic is correct & parent quest is not completed:
       if (validatedResults.parent_quest) {
@@ -121,6 +135,87 @@ const controller = {
       
       
       return res.status(200).json(quest);
+
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  updateQuest: async (req, res, next) => {
+    let validatedResults = null;
+    const { questId } = req.params;
+    try {
+      validatedResults = await QuestValidator.update.validateAsync(req.body);
+      const currentQuest = await QuestModel.findById(questId).populate("parent_quest");
+      if (!currentQuest) throw notFound("Quest not found in database");
+
+      // Prevent update if quest is completed
+      if (currentQuest.is_completed) throw badRequest("Cannot update a completed quest");
+
+      // Build the "next state" quest object
+      const updatedQuest = {...currentQuest.toObject(), ...validatedResults};
+      console.log("validatedResults: " + JSON.stringify(validatedResults));
+      console.log("updatedQuest: " + JSON.stringify(updatedQuest));
+
+      // 1. Check title uniqueness
+      if (validatedResults.title && validatedResults.title !== currentQuest.title) {
+        const duplicate = await QuestModel.exists({ title: validatedResults.title });
+        if (duplicate) {
+          throw badRequest("There is a quest with the same title. Please change the title for better differentiation.")
+        }
+      }
+
+      // 2. Validate new parent quest
+      if (
+        validatedResults.parent_quest && 
+        validatedResults.parent_quest !== currentQuest.parent_quest?._id.toString()
+      ) {
+        const newParent = await QuestModel.findById(validatedResults.parent_quest);
+        if (!newParent) throw notFound("Parent quest not found");
+
+        if (newParent.is_completed) throw badRequest("Cannot assign a completed quest as a parent");
+
+        if (!isHigherHierarchy(newParent.type, updatedQuest.type)) throw badRequest("Parent must be of higher hierarchy");
+
+        if (await isCircularReference(questId, newParent._id)) throw badRequest("Circular reference detected");
+      }
+
+      // 3. Validate type change
+      if (
+        validatedResults.type && 
+        validatedResults.type !== currentQuest.type
+      ) {
+        const isUpgraded = isHigherHierarchy(updatedQuest.type, currentQuest.type);
+        const hasChildren = await QuestModel.exists({ parent_quest: questId });
+
+        if (!isUpgraded && hasChildren) {
+          return res.status(400).json({ error: "Cannot downgrade type with children quests." });
+        }
+
+        // If upgrading, optionally update parent to grandparent
+        if (isUpgraded && currentQuest.parent_quest) {
+          const grandparentId = currentQuest.parent_quest?.parent_quest;
+          updatedQuest.parent_quest = grandparentId || null;
+        }
+      }
+
+      // update database once passed all validations
+      const newQuest = await QuestModel.findByIdAndUpdate(questId, updatedQuest, { new: true })
+        .select("-__v -user_id")
+        .populate({
+          path: "parent_quest",
+          select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+          populate: {
+            path: "parent_quest",
+            select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+          } 
+        })
+        .lean();
+      
+      return res.status(200).json({
+        message: "quest updated successfully",
+        updated_quest: newQuest
+      });
 
     } catch (error) {
       next(error);
