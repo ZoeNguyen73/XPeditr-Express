@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { QUEST_TYPES } = require("../config/constants");
+const { QUEST_TYPES, QUEST_STATUSES } = require("../config/constants");
 
 const questSchema = new mongoose.Schema({
   user_id: {
@@ -41,6 +41,11 @@ const questSchema = new mongoose.Schema({
   due_date: {
     type: Date,
     default: null,
+  },
+  status: {
+    type: String,
+    enum: [...QUEST_STATUSES],
+    default: "active",
   },
 }, { timestamps: true });
 

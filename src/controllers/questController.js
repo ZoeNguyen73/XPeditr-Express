@@ -51,7 +51,7 @@ const getChildrenQuest = async (quest) => {
   if (quest.type === "minor") return [];
   try {
     const quests = await QuestModel.find({ parent_quest: quest._id })
-      .select("_id type title description is_completed completed_at due_date createdAt updatedAt")
+      .select("_id type title description is_completed completed_at due_date createdAt updatedAt status")
       .lean()
     if (quests.length === 0) return [];
     for await (const childQuest of quests) {
@@ -120,10 +120,10 @@ const controller = {
         .select("-__v -user_id")
         .populate({
           path: "parent_quest",
-          select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+          select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt status",
           populate: {
             path: "parent_quest",
-            select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
+            select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt status",
           } 
         })
         .lean();
@@ -226,7 +226,7 @@ const controller = {
     try {
       const { questId } = req.params;
       const quest = await QuestModel.findById(questId);
-      if (!quest) throw notFound("Unable to find Quest");
+      if (!quest) throw notFound("Quest not found");
 
       if (quest.is_completed) {
         return res.status(200).json({ 
@@ -252,7 +252,28 @@ const controller = {
     } catch (error) {
       next(error);
     }
-  }
+  },
+
+  archiveQuest: async (req, res, next) => {
+    try {
+      const { questId } = req.params;
+      const quest = await QuestModel.findById(questId);
+      if (!quest) throw notFound("Quest not found");
+
+      // if quest is completed, do not allow delete/archive
+      if (quest.is_completed) throw createError("Cannot archive a completed quest");
+
+      // if quest has children, do not allow delete/archive
+      const hasChildren = await QuestModel.exists({parent_quest: questId});
+      if (hasChildren) throw createError("Cannot archive a quest with sub-quests");
+
+      quest.status = "archived";
+      await quest.save();
+      return res.status(200).json({ message: "Quest archived successfully"})
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = controller;

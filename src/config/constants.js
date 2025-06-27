@@ -12,6 +12,7 @@ const QUOTE_CATEGORIES = [
   "inspirational", "funny", "productivity", "self-care", "mindset",
   "combat", "routine", "rest", "mental-health", "focus", "growth",
 ];
+const QUEST_STATUSES = ["active", "archived"];
 
 module.exports = {
   FREQUENCY_TYPES,
@@ -21,4 +22,5 @@ module.exports = {
   COMPANION_TYPES,
   USER_ROLES,
   QUOTE_CATEGORIES,
+  QUEST_STATUSES,
 };
