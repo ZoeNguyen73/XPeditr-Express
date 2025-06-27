@@ -29,6 +29,25 @@ const parentValidation = async (childQuestType, parentQuestId) => {
   }
 };
 
+// TO DO: utils to calculate percentage completion
+
+const getChildrenQuest = async (quest) => {
+  if (quest.type === "minor") return [];
+  try {
+    const quests = await QuestModel.find({ parent_quest: quest._id })
+      .select("_id type title description is_completed completed_at due_date createdAt updatedAt")
+      .lean()
+    if (quests.length === 0) return [];
+    for await (const childQuest of quests) {
+      const grandChildrenQuests = await getChildrenQuest(childQuest);
+      childQuest.children_quests = grandChildrenQuests;
+    }
+    return quests;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const controller = {
   createQuest: async (req, res, next) => {
     let validatedResults = null;
@@ -84,6 +103,7 @@ const controller = {
       const { questId } = req.params;
 
       const quest = await QuestModel.findById(questId)
+        .select("-__v -user_id")
         .populate({
           path: "parent_quest",
           select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
@@ -91,10 +111,15 @@ const controller = {
             path: "parent_quest",
             select: "_id type title description is_completed completed_at parent_quest due_date createdAt updatedAt",
           } 
-        });
+        })
+        .lean();
 
       if (!quest) throw notFound("Unable to find Quest");
-
+      
+      const childrenQuests = await getChildrenQuest(quest);
+      quest.children_quests = childrenQuests;
+      
+      
       return res.status(200).json(quest);
 
     } catch (error) {
