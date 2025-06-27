@@ -2,10 +2,11 @@ const QuestModel = require("../models/questModel");
 const QuestValidator = require("../validations/questValidation");
 
 const { badRequest, notFound, createError } = require("../utils/errorHelpers");
-
 const parentValidation = async (childQuestType, parentQuestId) => {
   try {
     const parentQuest = await QuestModel.findById(parentQuestId);
+
+    if (!parentQuest) throw notFound("Parent Quest not found in database");
 
     if (parentQuest.type === "minor") { 
       throw badRequest("Minor Quests cannot have child quest. Please create a Task instead")
@@ -76,6 +77,24 @@ const controller = {
       next(error)
     }
 
+  },
+
+  retrieveQuest: async (req, res, next) => {
+    try {
+      const { questId } = req.params;
+
+      const quest = await QuestModel.findById(questId)
+        .populate({
+          path: "parent_quest"
+        });
+
+      if (!quest) throw notFound("Unable to find Quest");
+
+      return res.status(200).json(quest);
+
+    } catch (error) {
+      next(error);
+    }
   },
 };
 
