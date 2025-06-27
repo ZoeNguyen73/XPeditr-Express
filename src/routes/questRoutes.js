@@ -11,10 +11,16 @@ router.get("/:questId",
   userAuth.isAuthorized("Admin"), 
   questController.retrieveQuest
 );
+router.patch("/:questId/complete", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"), 
+  questController.completeQuest
+);
 router.patch("/:questId", 
   userAuth.isAuthenticated,
   userAuth.isAuthorized("Admin"), 
   questController.updateQuest
 );
+
 
 module.exports = router;

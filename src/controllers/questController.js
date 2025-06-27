@@ -221,6 +221,30 @@ const controller = {
       next(error);
     }
   },
+
+  completeQuest: async (req, res, next) => {
+    try {
+      const { questId } = req.params;
+      const quest = await QuestModel.findById(questId);
+      if (!quest) throw notFound("Unable to find Quest");
+
+      // check if there are incomplete children quest
+      const incompleteChildren = await QuestModel.find({
+        parent_quest: questId,
+        is_completed: false,
+      });
+
+      if (incompleteChildren.length > 0) throw createError("Cannot complete a quest while it has incomplete sub-quests");
+
+      quest.is_completed = true;
+      await quest.save();
+
+      return res.status(200).json({ message: "Quest marked as completed"});
+
+    } catch (error) {
+      next(error);
+    }
+  }
 };
 
 module.exports = controller;
