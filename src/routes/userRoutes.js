@@ -5,6 +5,12 @@ const userAuth = require("../middlewares/userAuth");
 
 const router = expresss.Router();
 
+router.get("/:username/quests", 
+  userAuth.isAuthenticated,
+  userAuth.isAuthorized("Admin"),
+  userController.retrieveUserQuests
+);
+
 router.get("/:username", userController.retrieveByUsername);
 
 router.put("/:username", 
