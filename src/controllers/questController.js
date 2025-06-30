@@ -2,6 +2,7 @@ const QuestModel = require("../models/questModel");
 const QuestValidator = require("../validations/questValidation");
 
 const { badRequest, notFound, createError } = require("../utils/errorHelpers");
+const getChildrenQuest = require("../utils/getChildrenQuests");
 
 const parentValidation = async (childQuestType, parentQuestId) => {
   try {
@@ -47,22 +48,22 @@ const isCircularReference = async (questId, newParentId) => {
 
 // TO DO: utils to calculate percentage completion
 
-const getChildrenQuest = async (quest) => {
-  if (quest.type === "minor") return [];
-  try {
-    const quests = await QuestModel.find({ parent_quest: quest._id })
-      .select("_id type title description is_completed completed_at due_date createdAt updatedAt status")
-      .lean()
-    if (quests.length === 0) return [];
-    for await (const childQuest of quests) {
-      const grandChildrenQuests = await getChildrenQuest(childQuest);
-      childQuest.children_quests = grandChildrenQuests;
-    }
-    return quests;
-  } catch (error) {
-    throw error;
-  }
-};
+// const getChildrenQuest = async (quest) => {
+//   if (quest.type === "minor") return [];
+//   try {
+//     const quests = await QuestModel.find({ parent_quest: quest._id })
+//       .select("_id type title description is_completed completed_at due_date createdAt updatedAt status")
+//       .lean();
+//     if (quests.length === 0) return [];
+//     for await (const childQuest of quests) {
+//       const grandChildrenQuests = await getChildrenQuest(childQuest);
+//       childQuest.children_quests = grandChildrenQuests;
+//     }
+//     return quests;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 const controller = {
   createQuest: async (req, res, next) => {
