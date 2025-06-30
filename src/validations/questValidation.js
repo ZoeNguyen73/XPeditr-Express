@@ -4,8 +4,8 @@ const { QUEST_TYPES } = require("../config/constants");
 
 const baseQuestFields = {
   type: Joi.string().valid(...QUEST_TYPES),
-  title: Joi.string().min(3).max(30),
-  description: Joi.string().max(200).allow(""),
+  title: Joi.string().min(3).max(100),
+  description: Joi.string().max(500).allow(""),
   parent_quest: Joi.string().hex().length(24).optional(),
   due_date: Joi.date().greater("now").optional(),
 };
