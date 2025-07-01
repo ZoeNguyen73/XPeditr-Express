@@ -17,6 +17,10 @@ const errorHandler = (error, req, res, next) => {
     error.details = error.details?.map(d => d.message).join(", ") || "Invalid input format";
   }
 
+  if (error.name === "TokenExpiredError") {
+    error.statusCode = 401;
+  }
+
   // set default error response
   const statusCode = error.statusCode || 500;
   // update error.message to follow the default message

@@ -188,7 +188,7 @@ const controller = {
       if (!tokenEntry) throw badRequest("Invalid refresh token");
 
       // check if the token has already expired
-      if (token.expiresAt < Date.now()) {
+      if (tokenEntry.expiresAt < Date.now()) {
         await RefreshTokenModel.deleteOne({ token: refreshToken });
         throw badRequest("Token has expired. Please log in again.");
       }
@@ -202,7 +202,7 @@ const controller = {
       }
 
       // generate new access token
-      const accessToken = createAccessToken(id);
+      const accessToken = createAccessToken(userId);
       return res.status(200).json({ accessToken });
       
     } catch (error) {
